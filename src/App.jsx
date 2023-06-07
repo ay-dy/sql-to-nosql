@@ -1,7 +1,8 @@
 import React from 'react';
-import Header from './components/Header';
-import MongoDBConnectionForm from './components/MongoDBConnectionForm';
-import MySQLConnectionForm from './components/MySQLConnectionForm';
+import ConvertButton from './components/main/ConvertButton';
+import Header from './components/main/Header';
+import MongoDBConnectionForm from './components/main/MongoDBConnectionForm';
+import MySQLConnectionForm from './components/main/MySQLConnectionForm';
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <Header />
       <MySQLConnectionForm />
       <MongoDBConnectionForm />
+      <ConvertButton />
     </>
   )
 }

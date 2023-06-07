@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../assets/logo.png';
+import logo from '../../assets/images/logo.png';
 
 const HeaderWrapper = styled.header`
   width: 100%;
-  height: 132px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 64px;
 `;
 
 const HeaderContainer = styled.div`
@@ -18,8 +18,8 @@ const HeaderContainer = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 256px;
-  height: 50px;
+  width: 272px;
+  height: 54px;
   margin-bottom: 16px;
 `;
 

@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
     max-width: 768px;
     min-height: 100vh;
     margin: 0 auto;
-    padding: 32px;
+    padding: 64px 32px;
     font-family: 'Rubik', sans-serif;
     font-size: 16px;
     line-height: 1.5;
