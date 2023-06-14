@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Container = styled.form`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,8 +14,8 @@ const Container = styled.div`
   background-color: #19394a;
 `;
 
-export default function FormBase({ children }) {
+export default function FormBase({ children, onSubmit }) {
   return (
-    <Container>{children}</Container>
+    <Container onSubmit={onSubmit}>{children}</Container>
   );
 }
