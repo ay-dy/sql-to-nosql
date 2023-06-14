@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ComponentContainer from '../global/ComponentContainer';
 
-const Label = styled.label`
+const InputLabel = styled.label`
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: 500;
@@ -19,18 +19,15 @@ const Input = styled.input`
   line-height: inherit;
   color: inherit;
   background-color: #25546d;
-  transition: outline 0.15s ease-in;
+  outline: 2px solid ${({ isValid }) => isValid ? '#2f6a8a' : '#d91e18'};
+  transition: outline 0.1s ease-in;
   
   ::placeholder {
     color: #c0dbe4;
   }
 
-  &:not(:hover):focus, &:hover {
-    outline: 2px solid #64a6ca ;
-  }
-
-  &:not(:hover) {
-    outline: 2px solid #2f6a8a;
+  &:focus, &:hover {
+    outline: 2px solid ${({ isValid }) => isValid ? '#64a6ca' : '#d91e18'};;
   }
 `;
 
@@ -41,15 +38,18 @@ const ErrorMsg = styled.span`
   color: #e93b36;
 `;
 
-export default function FormInputField({ name, isValid }) {
+export default function FormInputField({ type, name, isValid, onBlur }) {
   return (
     <ComponentContainer justifyContent={'flex-start'}>
-      <Label>{name}</Label>
-      <Input name={name} placeholder={name} />
-      {isValid && (
-        <ErrorMsg>Required</ErrorMsg>
-      )}
-      {/* <ErrorMsg>Required</ErrorMsg> */}
+      <InputLabel>{name}</InputLabel>
+      <Input
+        type={type}
+        name={name.toLowerCase()}
+        placeholder={name === 'Password' ? `${name} (Optional)` : name}
+        isValid={isValid}
+        onBlur={onBlur}
+      />
+      {!isValid && <ErrorMsg>Required</ErrorMsg>}
     </ComponentContainer>
   );
 }
