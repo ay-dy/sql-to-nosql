@@ -16,7 +16,7 @@ export default function ConvertButton() {
   return (
     <Wrapper>
       <Container>
-        <Button text={'Convert'} fontSize={22} />
+        <Button text={'Convert'} variant={'green'} fontSize={22} />
       </Container>
     </Wrapper>
   );
