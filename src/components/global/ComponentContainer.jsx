@@ -8,12 +8,17 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: ${({ alignItems }) => alignItems ? alignItems : 'center'};
   justify-content: ${({ justifyContent }) => justifyContent ? justifyContent : 'center'};
 `;
 
-export default function ComponentContainer({ maxWidth, justifyContent, children }) {
+export default function ComponentContainer({ maxWidth, alignItems, justifyContent, children }) {
   return (
-    <Container maxWidth={maxWidth} justifyContent={justifyContent}>{children}</Container>
+    <Container
+      maxWidth={maxWidth}
+      alignItems={alignItems}
+      justifyContent={justifyContent}>
+      {children}
+    </Container>
   );
 }
