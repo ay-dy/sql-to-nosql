@@ -13,14 +13,15 @@ const InfoContainer = styled.div`
   background-color: #25546d;
   outline: 2px solid #2f6a8a;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 12px 18px;
+  margin-bottom: 12px;
 `;
 
 const Info = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  margin: 8px 0;
+  margin: 6px 0;
 `;
 
 const Icon = styled.img`
@@ -44,10 +45,12 @@ export default function ConnectionInfo({ user, database }) {
           <Icon src={UserIcon} />
           <TextWrapper>{user}</TextWrapper>
         </Info>
-        <Info>
-          <Icon src={DatabaseIcon} />
-          <TextWrapper>{database}</TextWrapper>
-        </Info>
+        {database && (
+          <Info>
+            <Icon src={DatabaseIcon} />
+            <TextWrapper>{database}</TextWrapper>
+          </Info>
+        )}
       </InfoContainer>
     </ComponentContainer>
   );
