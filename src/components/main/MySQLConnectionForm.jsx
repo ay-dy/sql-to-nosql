@@ -8,7 +8,7 @@ import ConnectionInfo from '../global/ConnectionInfo';
 import LoadingOverlay from '../global/LoadingOverlay';
 import Toast from '../global/Toast';
 
-export default function MySQLForm() {
+export default function MySQLConnectionForm() {
   const [fieldValidities, setFieldValidities] = useState({
     "user": true,
     "database": true
@@ -17,19 +17,20 @@ export default function MySQLForm() {
   const [formData, setFormData] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const [response, setResponse] = useState(null);
+  const [submitterName, setSubmitterName] = useState(null);
+  const [isToastVisible, setIsToastVisible] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (response) {
-      const msg = response.message;
-      const keyWord = msg.substring(msg.lastIndexOf(' ') + 1, msg.length - 1);
+      setIsToastVisible(true);
 
-      if (keyWord === 'established') {
-        setIsConnected(true);
+      if (submitterName === 'sql-disconnect') {
+        setIsConnected(false);
       }
 
-      if (keyWord === 'closed') {
-        setIsConnected(false);
+      if (submitterName === 'sql-connect' && response.status === 200) {
+        setIsConnected(true);
       }
     }
   }, [response]);
@@ -55,7 +56,7 @@ export default function MySQLForm() {
     setFormData(data);
   }
 
-  async function closeConnection(e) {
+  async function closeConnection() {
     setIsFetching(true);
     setResponse(await disconnectSQL());
     setIsFetching(false);
@@ -63,22 +64,24 @@ export default function MySQLForm() {
 
   async function submitHandler(e) {
     e.preventDefault();
-    const buttonName = e.nativeEvent.submitter.name;
+    let buttonName = e.nativeEvent.submitter.name;
 
     if (buttonName === 'sql-connect') {
       await establishConnection(e);
     }
 
     if (buttonName === 'sql-disconnect') {
-      await closeConnection(e);
+      await closeConnection();
     }
+
+    setSubmitterName(buttonName);
   }
 
   return (
     <FormBase onSubmit={(e) => submitHandler(e)}>
       <FormLabel text={'MySQL Connection'} />
-      {response && (
-        <Toast status={response.status} msg={response.message} onClose={() => setResponse(null)} />
+      {isToastVisible && (
+        <Toast status={response.status} msg={response.message} onClose={() => setIsToastVisible(false)} />
       )}
       {!isConnected && (
         <>
@@ -103,7 +106,7 @@ export default function MySQLForm() {
             name={'sql-connect'}
             text={'Connect'}
             variant={'green'}
-            disabled={!!response}
+            disabled={!!isToastVisible}
           />
         </>
       )}
@@ -114,7 +117,7 @@ export default function MySQLForm() {
             name={'sql-disconnect'}
             text={'Disconnect'}
             variant={'red'}
-            disabled={!!response}
+            disabled={!!isToastVisible}
           />
         </>
       )}
