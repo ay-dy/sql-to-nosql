@@ -13,7 +13,6 @@ const colors = {
 
 const ToastWrapper = styled.div`
   width: 100%;
-  margin: 24px 0;
   border-radius: 8px;
   overflow: hidden;
   background-color: ${({ variant }) => colors[variant].light};
@@ -98,7 +97,7 @@ export default function Toast({ status, msg, onClose }) {
   }, [status]);
 
   return (
-    <ComponentContainer maxWidth={'512px'}>
+    <ComponentContainer maxWidth={'512px'} justifyContent={'flex-start'}>
       <ToastWrapper variant={variants[statusType]}>
         <ToastContainer variant={variants[statusType]}>
           <Icon src={iconSources[statusType]} />
