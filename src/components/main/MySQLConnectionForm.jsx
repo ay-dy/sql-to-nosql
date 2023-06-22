@@ -89,7 +89,7 @@ export default function MySQLConnectionForm() {
             type={'text'}
             name={'User'}
             isValid={fieldValidities.user}
-            onBlur={(e) => setOneFieldValidity(e.target)}
+            onChange={(e) => setOneFieldValidity(e.target)}
           />
           <FormInputField
             type={'password'}
@@ -100,7 +100,7 @@ export default function MySQLConnectionForm() {
             type={'text'}
             name={'Database'}
             isValid={fieldValidities.database}
-            onBlur={(e) => setOneFieldValidity(e.target)}
+            onChange={(e) => setOneFieldValidity(e.target)}
           />
           <FormSubmitButton
             name={'sql-connect'}
@@ -121,9 +121,7 @@ export default function MySQLConnectionForm() {
           />
         </>
       )}
-      {isFetching && (
-        <LoadingOverlay />
-      )}
+      {isFetching && <LoadingOverlay />}
     </FormBase>
   );
 }
