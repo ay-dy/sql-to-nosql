@@ -10,8 +10,7 @@ import Toast from '../global/Toast';
 
 export default function MongoDBConnectionForm() {
   const [uri, setUri] = useState('');
-  const [uriValidity, setUriValidity] = useState(true);
-  const [user, setUser] = useState('');
+  const [isUriValid, setIsUriValid] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [response, setResponse] = useState(null);
@@ -23,74 +22,58 @@ export default function MongoDBConnectionForm() {
     if (response) {
       setIsToastVisible(true);
 
-      if (submitterName === 'mongodb-disconnect') {
-        setIsConnected(false);
-      }
-
       if (submitterName === 'mongodb-connect' && response.status === 200) {
         setIsConnected(true);
+      } else {
         setUri('');
+        setIsConnected(false);
       }
     }
   }, [response]);
 
-  function censorPassword() {
+  function censoredUri() {
     const end = uri.indexOf('@');
     const start = uri.lastIndexOf(':', end) + 1;
 
-    if (start !== -1 && end !== -1) {
-      return uri.substring(0, start) + '*****' + uri.substring(end + 1);
-    } else {
-      return uri;
-    }
+    return (start !== -1 && end !== -1)
+      ? uri.substring(0, start) + '*****' + uri.substring(end)
+      : uri;
   }
 
   function getUser() {
     const start = uri.indexOf('://') + 3;
     const end = uri.indexOf(':', start);
-    return uri.substring(start, end);;
-  }
 
-  async function establishConnection() {
-    if (uri) {
-      setIsFetching(true);
-      setResponse(await connectMongoDB({ uri: uri }));
-      setIsFetching(false);
-    }
-  }
-
-  async function closeConnection() {
-    setIsFetching(true);
-    setResponse(await disconnectMongoDB());
-    setIsFetching(false);
-  }
-
-  function focusHandler() {
-    setIsFocused(true);
-  }
-
-  function blurHandler() {
-    setIsFocused(false);
-    setUriValidity(!!uri);
-    setUser(getUser());
+    return uri.substring(start, end);
   }
 
   async function submitHandler(e) {
     e.preventDefault();
-    let buttonName = e.nativeEvent.submitter.name;
 
-    if (buttonName === 'mongodb-connect') {
-      await establishConnection();
+    if (!uri) {
+      return;
     }
 
-    if (buttonName === 'mongodb-disconnect') {
-      await closeConnection();
+    const buttonName = e.nativeEvent.submitter.name;
+    let fn, arg;
+
+    if (buttonName === 'mongodb-connect') {
+      fn = connectMongoDB;
+      arg = { uri: uri };
+    } else {
+      fn = disconnectMongoDB;
     }
 
     setSubmitterName(buttonName);
+    setIsFetching(true);
+    setResponse(await fn(arg));
+    setIsFetching(false);
   }
 
-  const renderedValue = isFocused ? uri : uri && censorPassword(uri);
+  function inputHandler(uri) {
+    setUri(uri);
+    setIsUriValid(!!uri);
+  }
 
   return (
     <FormBase onSubmit={(e) => submitHandler(e)}>
@@ -102,11 +85,11 @@ export default function MongoDBConnectionForm() {
         <>
           <FormInputField
             name={'URI'}
-            value={renderedValue}
-            isValid={uriValidity}
-            onFocus={focusHandler}
-            onBlur={(e) => blurHandler(e.target.value)}
-            onChange={(e) => setUri(e.target.value)}
+            value={isFocused ? uri : censoredUri()}
+            isValid={isUriValid}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={(e) => inputHandler(e.target.value)}
           />
           <FormSubmitButton
             name={'mongodb-connect'}
@@ -118,7 +101,7 @@ export default function MongoDBConnectionForm() {
       )}
       {isConnected && (
         <>
-          <ConnectionInfo user={user} />
+          <ConnectionInfo user={getUser()} />
           <FormSubmitButton
             name={'mongodb-disconnect'}
             text={'Disconnect'}
@@ -127,9 +110,7 @@ export default function MongoDBConnectionForm() {
           />
         </>
       )}
-      {isFetching && (
-        <LoadingOverlay />
-      )}
+      {isFetching && <LoadingOverlay />}
     </FormBase>
   );
 }
