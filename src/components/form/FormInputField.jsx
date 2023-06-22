@@ -38,7 +38,7 @@ const ErrorMsg = styled.span`
   color: #e93b36;
 `;
 
-export default function FormInputField({ type, name, isValid, onBlur }) {
+export default function FormInputField({ type, name, isValid, onBlur, ...rest }) {
   return (
     <ComponentContainer justifyContent={'flex-start'}>
       <InputLabel>{name}</InputLabel>
@@ -48,6 +48,7 @@ export default function FormInputField({ type, name, isValid, onBlur }) {
         placeholder={name === 'Password' ? `${name} (Optional)` : name}
         isValid={isValid}
         onBlur={onBlur}
+        {...rest}
       />
       {!isValid && <ErrorMsg>Required</ErrorMsg>}
     </ComponentContainer>
