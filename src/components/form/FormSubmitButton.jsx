@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   align-self: flex-end;
 `;
 
-export default function FormSubmitButton({ name, text, variant, disabled }) {
+export default function FormSubmitButton({ name, text, variant, disabled, isLoading }) {
   return (
     <ComponentContainer>
       <Wrapper>
@@ -17,6 +17,7 @@ export default function FormSubmitButton({ name, text, variant, disabled }) {
           text={text}
           variant={variant}
           disabled={disabled}
+          isLoading={isLoading}
         />
       </Wrapper>
     </ComponentContainer>
