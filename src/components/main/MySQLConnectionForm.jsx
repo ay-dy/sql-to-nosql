@@ -5,10 +5,9 @@ import FormInputField from '../form/FormInputField';
 import FormLabel from '../form/FormLabel';
 import FormSubmitButton from '../form/FormSubmitButton';
 import ConnectionInfo from '../global/ConnectionInfo';
-import LoadingOverlay from '../global/LoadingOverlay';
 import Toast from '../global/Toast';
 
-export default function MySQLConnectionForm() {
+export default function MySQLConnectionForm({ isConnected, setIsConnected, isConverting }) {
   const [fieldValidities, setFieldValidities] = useState({
     "user": true,
     "database": true
@@ -19,7 +18,6 @@ export default function MySQLConnectionForm() {
   const [response, setResponse] = useState(null);
   const [submitterName, setSubmitterName] = useState(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (response) {
@@ -106,7 +104,8 @@ export default function MySQLConnectionForm() {
             name={'sql-connect'}
             text={'Connect'}
             variant={'green'}
-            disabled={!!isToastVisible}
+            disabled={!!isToastVisible || isFetching}
+            isLoading={isFetching || isConverting}
           />
         </>
       )}
@@ -117,11 +116,10 @@ export default function MySQLConnectionForm() {
             name={'sql-disconnect'}
             text={'Disconnect'}
             variant={'red'}
-            disabled={!!isToastVisible}
+            disabled={!!isToastVisible || isConverting}
           />
         </>
       )}
-      {isFetching && <LoadingOverlay />}
     </FormBase>
   );
 }

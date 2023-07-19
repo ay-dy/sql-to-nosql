@@ -5,10 +5,9 @@ import FormInputField from '../form/FormInputField';
 import FormLabel from '../form/FormLabel';
 import FormSubmitButton from '../form/FormSubmitButton';
 import ConnectionInfo from '../global/ConnectionInfo';
-import LoadingOverlay from '../global/LoadingOverlay';
 import Toast from '../global/Toast';
 
-export default function MongoDBConnectionForm() {
+export default function MongoDBConnectionForm({ isConnected, setIsConnected, isConverting }) {
   const [uri, setUri] = useState('');
   const [isUriValid, setIsUriValid] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
@@ -16,14 +15,15 @@ export default function MongoDBConnectionForm() {
   const [response, setResponse] = useState(null);
   const [submitterName, setSubmitterName] = useState(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (response) {
       setIsToastVisible(true);
 
-      if (submitterName === 'mongodb-connect' && response.status === 200) {
-        setIsConnected(true);
+      if (submitterName === 'mongodb-connect') {
+        if (response.status === 200) {
+          setIsConnected(true);
+        }
       } else {
         setUri('');
         setIsConnected(false);
@@ -45,6 +45,15 @@ export default function MongoDBConnectionForm() {
     const end = uri.indexOf(':', start);
 
     return uri.substring(start, end);
+  }
+
+  function getDatabase() {
+    const start = uri.lastIndexOf('/') + 1;
+    const end = uri.lastIndexOf('?');
+
+    return (start > end && end !== -1)
+      ? uri.substring(start, end)
+      : uri.substring(start);
   }
 
   async function submitHandler(e) {
@@ -95,22 +104,22 @@ export default function MongoDBConnectionForm() {
             name={'mongodb-connect'}
             text={'Connect'}
             variant={'green'}
-            disabled={!!isToastVisible}
+            disabled={!!isToastVisible || isFetching}
+            isLoading={isFetching || isConverting}
           />
         </>
       )}
       {isConnected && (
         <>
-          <ConnectionInfo user={getUser()} />
+          <ConnectionInfo user={getUser()} database={getDatabase()} />
           <FormSubmitButton
             name={'mongodb-disconnect'}
             text={'Disconnect'}
             variant={'red'}
-            disabled={!!isToastVisible}
+            disabled={!!isToastVisible || isConverting}
           />
         </>
       )}
-      {isFetching && <LoadingOverlay />}
     </FormBase>
   );
 }
