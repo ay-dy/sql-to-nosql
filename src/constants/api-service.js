@@ -16,7 +16,7 @@ export async function connectSQL(config) {
 
   } catch {
     status = 4;
-    message = 'API at rest. Who\'s the alarm?';
+    message = 'Request failed to reach the server.';
   }
 
   return { status, message };
@@ -36,7 +36,7 @@ export async function disconnectSQL() {
 
   } catch (error) {
     status = 4;
-    message = 'API at rest. Who\'s the alarm?';
+    message = 'Request failed to reach the server.';
   }
 
   return { status, message };
@@ -57,7 +57,7 @@ export async function connectMongoDB(config) {
     message = data.message;
   } catch (error) {
     status = 4;
-    message = 'API at rest. Who\'s the alarm?';
+    message = 'Request failed to reach the server.';
   }
 
   return { status, message };
@@ -77,7 +77,7 @@ export async function disconnectMongoDB() {
 
   } catch (error) {
     status = 4;
-    message = 'API at rest. Who\'s the alarm?';
+    message = 'Request failed to reach the server.';
   }
 
   return { status, message };
@@ -97,7 +97,7 @@ export async function convert() {
   } catch (error) {
     console.log(error);
     status = 4;
-    message = 'API at rest. Who\'s the alarm?';
+    message = 'Request failed to reach the server.';
   }
 
   return { status, message };
